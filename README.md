@@ -6,6 +6,7 @@ NestJS backend for Localia platform. Handles authentication, user management, an
 
 - **NestJS** — Framework
 - **Better Auth** — Authentication (email/password, Google OAuth)
+- **Resend** — Transactional email delivery
 - **Drizzle ORM** — Database ORM
 - **PostgreSQL** — Primary database
 - **TypeScript** — Language
@@ -32,12 +33,16 @@ src/
 ├── infrastructure/                 # External concerns
 │   ├── auth/
 │   │   └── schema.ts               # Drizzle schema (user, session, account tables)
+│   ├── email/
+│   │   ├── email.service.ts         # Email sending via Resend
+│   │   └── email.module.ts          # NestJS module
 │   └── repositories/user/
 │       └── user.repository.ts       # Repository implementation
 ├── presentation/                   # HTTP layer
 │   └── controllers/
-│       ├── auth.controller.ts       # /auth/me, /auth/session
-│       ├── profile.controller.ts    # /profile, /profile/role
+│       ├── auth.controller.ts        # /auth/* (Better Auth proxy)
+│       ├── notifications.controller.ts # /notifications/welcome-email
+│       ├── profile.controller.ts     # /profile, /profile/role
 │       └── health.controller.ts     # /health
 ├── config/
 │   ├── configuration.ts             # Environment variable loader
@@ -65,6 +70,8 @@ src/
 | `GOOGLE_CLIENT_ID` | — | Google OAuth client ID |
 | `GOOGLE_CLIENT_SECRET` | — | Google OAuth client secret |
 | `BASE_URL` | http://localhost:5173 | Frontend URL (CORS) |
+| `RESEND_API_KEY` | — | Resend API key |
+| `RESEND_FROM_EMAIL` | Localia `<noreply@resend.dev>` | Sender email address |
 
 ## Getting Started
 
@@ -116,12 +123,13 @@ GET /health
 | POST | `/auth/sign-in/social` | Initiate OAuth (Google) |
 | GET | `/auth/get-session` | Get current session |
 
-### Custom Auth Endpoints
+### Custom Endpoints
 
 | Method | Path | Description |
 |--------|------|-------------|
 | GET | `/profile` | Get current user profile |
 | PATCH | `/profile/role` | Update role (seeker ↔ agent) |
+| POST | `/notifications/welcome-email` | Send welcome email to registered user |
 
 ## Scripts
 
@@ -137,20 +145,21 @@ GET /health
 
 ## Tests
 
-Unit and integration tests with Jest.
+Unit tests with Jest (7 suites, 24 tests — all passing).
 
 ```
 src/
-├── domain/entities/user.entity.spec.ts          # User entity tests
+├── domain/entities/user.entity.spec.ts
 ├── application/user/
-│   ├── get-user/get-user.use-case.spec.ts     # GetUser use-case tests
-│   └── update-user/update-user.use-case.spec.ts # UpdateUser use-case tests
+│   ├── get-user/get-user.use-case.spec.ts
+│   └── update-user/update-user.use-case.spec.ts
 └── presentation/controllers/
-    ├── health.controller.spec.ts              # Health controller tests
-    └── profile.controller.spec.ts             # Profile controller tests
+    ├── health.controller.spec.ts
+    ├── notifications.controller.spec.ts
+    └── profile.controller.spec.ts
+infrastructure/email/
+└── email.service.spec.ts
 ```
-
-**Coverage:** 5 test suites, 15 tests — all passing.
 
 Note: E2e tests for auth are not included because Better Auth's ESM-only distribution is incompatible with Jest's CommonJS transform. Auth flows are verified manually via HTTP (see `docs/proofs/`).
 

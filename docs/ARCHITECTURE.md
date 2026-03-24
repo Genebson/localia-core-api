@@ -54,6 +54,9 @@ application/user/
 ```
 infrastructure/
 ├── auth/schema.ts            # Drizzle schema (user, session, account, verification tables)
+├── email/
+│   ├── email.service.ts      # Email sending via Resend (sendWelcomeEmail, sendPasswordResetEmail)
+│   └── email.module.ts       # NestJS module wiring nestjs-resend
 └── repositories/user/user.repository.ts  # Repository implementation
 ```
 
@@ -62,6 +65,7 @@ infrastructure/
 ```
 presentation/controllers/
 ├── auth.controller.ts        # /auth/me, /auth/session (Better Auth proxy)
+├── notifications.controller.ts # /notifications/welcome-email (email triggers)
 ├── profile.controller.ts     # /profile, /profile/role (custom user endpoints)
 └── health.controller.ts      # /health
 ```
@@ -96,6 +100,30 @@ Because Better Auth's Express middleware intercepts ALL `/auth/*` requests, cust
 ### Session Cookie
 
 Better Auth stores session in `better-auth.session_token` cookie (HttpOnly). The `Session` decorator from `@thallesp/nestjs-better-auth` reads `request.session` set by the auth middleware.
+
+## Email Flow
+
+### Stack
+
+- **Resend** (`nestjs-resend`) — transactional email delivery via Resend API
+- **NotificationsController** — custom NestJS controller outside `/auth/` prefix to avoid Better Auth route shadowing
+
+### Custom Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | `/notifications/welcome-email` | Send welcome email to newly registered user |
+
+### Route Shadowing
+
+`nestjs-better-auth` registers Express-level routes at `/auth/*` that intercept ALL matching requests before they reach NestJS controllers. To expose custom endpoints without conflict, controllers are placed outside the `/auth/` prefix under `/notifications/`.
+
+### Environment Variables
+
+| Variable | Description |
+|----------|-------------|
+| `RESEND_API_KEY` | Resend API key |
+| `RESEND_FROM_EMAIL` | Sender email (e.g., `Localia <noreply@resend.dev>`) |
 
 ## Configuration
 
@@ -150,6 +178,7 @@ All configuration in `src/config/`:
 - No framework decorators in domain ✅
 - Clean build (`nest build`) ✅
 - Auth flow end-to-end verified ✅
+- Email (Resend) integration verified ✅
 
 ## Environment Variables
 
@@ -164,6 +193,8 @@ All configuration in `src/config/`:
 | `GOOGLE_CLIENT_ID` | Google OAuth client ID |
 | `GOOGLE_CLIENT_SECRET` | Google OAuth client secret |
 | `BASE_URL` | Frontend URL for CORS |
+| `RESEND_API_KEY` | Resend API key |
+| `RESEND_FROM_EMAIL` | Sender email address |
 
 ## API Base URL
 
