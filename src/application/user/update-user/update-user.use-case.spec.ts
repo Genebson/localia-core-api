@@ -16,7 +16,7 @@ describe('UpdateUserUseCase', () => {
 		useCase = new UpdateUserUseCase(mockRepository);
 	});
 
-	it('should update role to agent with valid tuition', async () => {
+	it('should update role to agent with valid licenseNumber', async () => {
 		const updatedUser = new User(
 			'user-123',
 			'agent@example.com',
@@ -32,16 +32,16 @@ describe('UpdateUserUseCase', () => {
 
 		const dto = new UpdateUserRequestDto();
 		dto.role = UserRole.AGENT;
-		dto.tuition = 'ABC12345';
+		dto.licenseNumber = 'ABC12345';
 
 		const result = await useCase.execute('user-123', dto);
 
 		expect(result.data.attributes.role).toBe('agent');
-		expect(result.data.attributes.tuition).toBe('ABC12345');
+		expect(result.data.attributes.licenseNumber).toBe('ABC12345');
 		expect(mockRepository.updateRole).toHaveBeenCalledWith('user-123', UserRole.AGENT, 'ABC12345');
 	});
 
-	it('should update role to seeker and clear tuition', async () => {
+	it('should update role to seeker and clear licenseNumber', async () => {
 		const updatedUser = new User(
 			'user-123',
 			'user@example.com',
@@ -61,19 +61,19 @@ describe('UpdateUserUseCase', () => {
 		const result = await useCase.execute('user-123', dto);
 
 		expect(result.data.attributes.role).toBe('seeker');
-		expect(result.data.attributes.tuition).toBeNull();
+		expect(result.data.attributes.licenseNumber).toBeNull();
 		expect(mockRepository.updateRole).toHaveBeenCalledWith('user-123', UserRole.SEEKER, null);
 	});
 
-	it('should throw BadRequestException when agent role has short tuition', async () => {
+	it('should throw BadRequestException when agent role has short licenseNumber', async () => {
 		const dto = new UpdateUserRequestDto();
 		dto.role = UserRole.AGENT;
-		dto.tuition = 'AB';
+		dto.licenseNumber = 'AB';
 
 		await expect(useCase.execute('user-123', dto)).rejects.toThrow(BadRequestException);
 	});
 
-	it('should throw BadRequestException when agent role has no tuition', async () => {
+	it('should throw BadRequestException when agent role has no licenseNumber', async () => {
 		const dto = new UpdateUserRequestDto();
 		dto.role = UserRole.AGENT;
 

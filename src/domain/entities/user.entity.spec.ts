@@ -39,7 +39,7 @@ describe('User Domain Entity', () => {
 			);
 
 			expect(agent.role).toBe(UserRole.AGENT);
-			expect(agent.tuition).toBe('COL-2024-12345');
+			expect(agent.licenseNumber).toBe('COL-2024-12345');
 		});
 
 		it('should have default values', () => {
@@ -50,7 +50,7 @@ describe('User Domain Entity', () => {
 			expect(user.name).toBeNull();
 			expect(user.role).toBe(UserRole.SEEKER);
 			expect(user.emailVerified).toBe(false);
-			expect(user.tuition).toBeNull();
+			expect(user.licenseNumber).toBeNull();
 		});
 	});
 });

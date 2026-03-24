@@ -27,18 +27,18 @@ export class UserRepository implements IGetUserRepository, IUpdateUserRepository
 			foundUser.emailVerified ?? false,
 			foundUser.image,
 			foundUser.role as UserRole,
-			foundUser.tuition,
+			foundUser.licenseNumber,
 			foundUser.createdAt ?? undefined,
 			foundUser.updatedAt ?? undefined,
 		);
 	}
 
-	async updateRole(id: string, role: UserRole, tuition: string | null): Promise<User> {
+	async updateRole(id: string, role: UserRole, licenseNumber: string | null): Promise<User> {
 		const [updatedUser] = await db
 			.update(userSchema)
 			.set({
 				role: role,
-				tuition: tuition,
+				licenseNumber: licenseNumber,
 			})
 			.where(eq(userSchema.id, id))
 			.returning();
@@ -50,7 +50,7 @@ export class UserRepository implements IGetUserRepository, IUpdateUserRepository
 			updatedUser.emailVerified ?? false,
 			updatedUser.image,
 			updatedUser.role as UserRole,
-			updatedUser.tuition,
+			updatedUser.licenseNumber,
 			updatedUser.createdAt ?? undefined,
 			updatedUser.updatedAt ?? undefined,
 		);

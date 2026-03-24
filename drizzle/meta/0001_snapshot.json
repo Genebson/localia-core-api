@@ -252,8 +252,8 @@
           "notNull": false,
           "default": "'seeker'"
         },
-        "tuition": {
-          "name": "tuition",
+        "license_number": {
+          "name": "license_number",
           "type": "text",
           "primaryKey": false,
           "notNull": false

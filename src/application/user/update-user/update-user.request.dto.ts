@@ -8,5 +8,5 @@ export class UpdateUserRequestDto {
 	@IsOptional()
 	@IsString()
 	@MinLength(5)
-	tuition?: string;
+	licenseNumber?: string;
 }

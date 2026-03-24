@@ -4,5 +4,5 @@ import { UserRole } from '../../../domain/entities/user-role.enum.js';
 export const UPDATE_USER_REPOSITORY_KEY = 'update_user_repository';
 
 export interface IUpdateUserRepository {
-	updateRole(id: string, role: UserRole, tuition: string | null): Promise<User>;
+	updateRole(id: string, role: UserRole, licenseNumber: string | null): Promise<User>;
 }

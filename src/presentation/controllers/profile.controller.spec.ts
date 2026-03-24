@@ -39,7 +39,7 @@ describe('ProfileController', () => {
 						email: 'test@example.com',
 						name: 'Test User',
 						role: UserRole.SEEKER,
-						tuition: null,
+						licenseNumber: null,
 					},
 				},
 			};
@@ -59,7 +59,7 @@ describe('ProfileController', () => {
 	});
 
 	describe('PATCH /profile/role', () => {
-		it('should update role to agent with valid tuition', async () => {
+		it('should update role to agent with valid licenseNumber', async () => {
 			const mockUpdatedUser = {
 				data: {
 					type: 'user' as const,
@@ -68,13 +68,13 @@ describe('ProfileController', () => {
 						email: 'test@example.com',
 						name: 'Test User',
 						role: UserRole.AGENT,
-						tuition: 'ABC12345',
+						licenseNumber: 'ABC12345',
 					},
 				},
 			};
 			mockUpdateUserUseCase.execute.mockResolvedValue(mockUpdatedUser);
 
-			const dto = { role: UserRole.AGENT, tuition: 'ABC12345' };
+			const dto = { role: UserRole.AGENT, licenseNumber: 'ABC12345' };
 			const result = await controller.updateRole(mockSession as any, dto as any);
 
 			expect(result).toEqual(mockUpdatedUser);
@@ -90,7 +90,7 @@ describe('ProfileController', () => {
 						email: 'test@example.com',
 						name: 'Test User',
 						role: UserRole.SEEKER,
-						tuition: null,
+						licenseNumber: null,
 					},
 				},
 			};
@@ -107,7 +107,7 @@ describe('ProfileController', () => {
 			const emptySession = { user: null, session: null };
 
 			await expect(
-				controller.updateRole(emptySession as any, { role: UserRole.AGENT, tuition: 'ABC123' } as any),
+				controller.updateRole(emptySession as any, { role: UserRole.AGENT, licenseNumber: 'ABC123' } as any),
 			).rejects.toThrow('Not authenticated');
 		});
 	});

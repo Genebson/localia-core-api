@@ -7,7 +7,7 @@ export class User extends Base {
 	emailVerified: boolean;
 	image: string | null;
 	role: UserRole;
-	tuition: string | null;
+	licenseNumber: string | null;
 
 	constructor(
 		id?: string,
@@ -16,7 +16,7 @@ export class User extends Base {
 		emailVerified?: boolean,
 		image?: string | null,
 		role?: UserRole,
-		tuition?: string | null,
+		licenseNumber?: string | null,
 		createdAt?: Date,
 		updatedAt?: Date,
 	) {
@@ -26,6 +26,6 @@ export class User extends Base {
 		this.emailVerified = emailVerified ?? false;
 		this.image = image ?? null;
 		this.role = role ?? UserRole.SEEKER;
-		this.tuition = tuition ?? null;
+		this.licenseNumber = licenseNumber ?? null;
 	}
 }

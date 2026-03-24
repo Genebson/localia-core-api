@@ -9,7 +9,7 @@ export class GetUserResponseDto {
 			email: string;
 			name: string | null;
 			role: UserRole;
-			tuition: string | null;
+			licenseNumber: string | null;
 		};
 	};
 
@@ -26,7 +26,7 @@ export class GetUserResponseDto {
 					email: entity.email,
 					name: entity.name,
 					role: entity.role,
-					tuition: entity.tuition,
+					licenseNumber: entity.licenseNumber,
 				},
 			},
 		});

@@ -50,7 +50,7 @@ export const auth = betterAuth({
 				input: true,
 				defaultValue: 'seeker',
 			},
-			tuition: {
+			licenseNumber: {
 				type: 'string',
 				required: false,
 				returned: true,
