@@ -1,0 +1,345 @@
+openapi: 3.0.0
+info:
+  title: Localia API
+  description: Localia Core API following JSON:API specification with Better Auth
+  version: '1.0'
+  contact:
+    name: Localia Support
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+paths:
+  /health:
+    get:
+      operationId: HealthController_check
+      summary: Health check endpoint
+      tags:
+        - Health
+      responses:
+        '200':
+          description: Application health status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  timestamp:
+                    type: string
+                    format: date-time
+
+  /api/auth/sign-up/email:
+    post:
+      operationId: AuthController_signUp
+      summary: Register a new user with email and password
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUpRequest'
+            example:
+              email: user@example.com
+              password: password123
+              name: John Doe
+      responses:
+        '200':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignUpResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResource'
+
+  /api/auth/sign-in/email:
+    post:
+      operationId: AuthController_signIn
+      summary: Login user with email and password
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignInRequest'
+            example:
+              email: user@example.com
+              password: password123
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignInResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResource'
+
+  /api/auth/sign-out:
+    post:
+      operationId: AuthController_signOut
+      summary: Sign out the current user
+      tags:
+        - Auth
+      security:
+        - CookieAuth: []
+      responses:
+        '200':
+          description: Signed out successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Signed out successfully
+
+  /api/auth/get-session:
+    get:
+      operationId: AuthController_getSession
+      summary: Get current session information
+      tags:
+        - Auth
+      security:
+        - CookieAuth: []
+      responses:
+        '200':
+          description: Session data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionResponse'
+        '401':
+          description: No active session
+          content:
+            application/json:
+              schema:
+                type: 'null'
+                example: null
+
+  /api/auth/oauth/google:
+    get:
+      operationId: AuthController_googleOAuth
+      summary: Initiate Google OAuth flow
+      tags:
+        - Auth
+      responses:
+        '302':
+          description: Redirect to Google OAuth provider
+
+components:
+  schemas:
+    SignUpRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          description: User email address
+          example: user@example.com
+        password:
+          type: string
+          minLength: 8
+          description: Password (min 8 characters)
+          example: password123
+        name:
+          type: string
+          description: User display name
+          example: John Doe
+
+    SignInRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          description: User email address
+          example: user@example.com
+        password:
+          type: string
+          description: User password
+          example: password123
+
+    SignUpResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: Session token
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            email:
+              type: string
+              format: email
+            emailVerified:
+              type: boolean
+            image:
+              type: string
+              nullable: true
+            createdAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
+
+    SignInResponse:
+      type: object
+      properties:
+        redirect:
+          type: boolean
+        token:
+          type: string
+          description: Session token
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            email:
+              type: string
+              format: email
+            emailVerified:
+              type: boolean
+            image:
+              type: string
+              nullable: true
+            createdAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
+
+    SessionResponse:
+      type: object
+      properties:
+        session:
+          type: object
+          properties:
+            id:
+              type: string
+            expiresAt:
+              type: string
+              format: date-time
+            token:
+              type: string
+            createdAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
+            ipAddress:
+              type: string
+            userAgent:
+              type: string
+            userId:
+              type: string
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            email:
+              type: string
+              format: email
+            emailVerified:
+              type: boolean
+            image:
+              type: string
+              nullable: true
+            createdAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
+
+    ErrorResource:
+      type: object
+      required:
+        - errors
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            required:
+              - status
+              - title
+              - detail
+            properties:
+              status:
+                type: string
+                description: HTTP status code as string
+                example: '500'
+              title:
+                type: string
+                description: Short, human-readable summary of the problem
+                example: Internal Server Error
+              detail:
+                type: string
+                description: Human-readable explanation specific to this occurrence
+                example: Database connection failed
+
+    ValidationErrorResource:
+      type: object
+      required:
+        - errors
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            required:
+              - status
+              - title
+              - detail
+            properties:
+              status:
+                type: string
+                example: '400'
+              title:
+                type: string
+                example: Bad Request
+              detail:
+                type: string
+                example: Validation failed
+
+  securitySchemes:
+    CookieAuth:
+      type: apiKey
+      in: cookie
+      name: better-auth.session_token
+      description: Session cookie set after sign-in
