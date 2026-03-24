@@ -2,7 +2,7 @@
 
 ## Status
 
-**Proposed** — Pending implementation.
+**Implemented** ✅
 
 ## Context
 
@@ -10,9 +10,8 @@ Better Auth handles authentication but does not send verification or welcome ema
 
 1. **User registration** — Send welcome email after sign-up
 2. **Password reset** — Send reset link via email
-3. **Email verification** — (future) Verify email ownership
 
-## Decision: Resend
+## Decision: Resend + nestjs-resend
 
 **Why Resend:**
 - Node.js SDK with SendGrid-compatible API
@@ -20,71 +19,79 @@ Better Auth handles authentication but does not send verification or welcome ema
 - Clean, minimal setup
 - Supports React Email templates
 
-## Implementation Plan
+**Package:** `nestjs-resend` — thin NestJS wrapper providing `ResendModule` and `ResendService` for dependency injection.
 
-### 1. Install Resend
+## Implementation
+
+### Package
 
 ```bash
-npm install resend
+npm install nestjs-resend
 ```
 
-### 2. Environment Variables
-
-Add to `.env` and `docs/`:
+### Environment Variables
 
 | Variable | Description |
 |----------|-------------|
 | `RESEND_API_KEY` | Resend API key |
-| `RESEND_FROM_EMAIL` | Default sender email (e.g., `Localia <noreply@localia.com>`) |
+| `RESEND_FROM_EMAIL` | Sender email (e.g., `Localia <noreply@resend.dev>`) |
+| `EMAIL_BASE_URL` | Frontend base URL for password reset links |
 
-### 3. Email Service (`infrastructure/email/email.service.ts`)
-
-```typescript
-import { Injectable } from '@nestjs/common';
-import { Resend } from 'resend';
-
-@Injectable()
-export class EmailService {
-  private readonly resend: Resend;
-
-  constructor() {
-    this.resend = new Resend(process.env.RESEND_API_KEY);
-  }
-
-  async sendWelcomeEmail(to: string, name: string): Promise<void> {
-    await this.resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL,
-      to,
-      subject: 'Welcome to Localia',
-      html: `<h1>Welcome, ${name}!</h1><p>Your account has been created.</p>`,
-    });
-  }
-}
-```
-
-### 4. Integration Points
-
-Better Auth sign-up triggers `onCreateUser` hook or we wrap `signUpWithEmail` in a custom controller. Since Better Auth doesn't expose hooks natively, we'll use a custom sign-up flow that:
-
-1. Calls Better Auth's `sign-up/email`
-2. If successful, calls `EmailService.sendWelcomeEmail()`
-
-### 5. Email Templates
-
-Use React Email for templating (future). Start with simple HTML strings for MVP.
-
-## Files to Create
+### Files
 
 ```
 src/infrastructure/email/
-├── email.service.ts           # Resend wrapper
-└── email.module.ts            # NestJS module
+├── email.service.ts           # EmailService (sendWelcomeEmail, sendPasswordResetEmail)
+├── email.service.spec.ts      # Unit tests
+└── email.module.ts            # NestJS module wiring ResendModule
 ```
 
-## Files to Modify
+### NotificationsController
 
-- `package.json` — add `resend`
-- `.env.dist` — add `RESEND_API_KEY`, `RESEND_FROM_EMAIL`
-- `docs/ARCHITECTURE.md` — update with email service
-- `app.module.ts` — import `EmailModule`
-- `presentation/controllers/auth.controller.ts` — custom sign-up with email
+Custom NestJS controller at `/notifications/welcome-email` — placed **outside** the `/auth/` prefix to avoid `nestjs-better-auth` Express route shadowing.
+
+```
+presentation/controllers/
+└── notifications.controller.ts  # /notifications/welcome-email
+```
+
+## Integration Flow
+
+### Registration → Welcome Email
+
+```
+Frontend login() 
+  → POST /auth/sign-up/email (Better Auth)
+  → POST /notifications/welcome-email (NotificationsController)
+  → EmailService.sendWelcomeEmail()
+  → Resend API
+  → User inbox
+```
+
+### Password Reset (future endpoint)
+
+```
+User requests reset
+  → POST /auth/forgot-password (to implement)
+  → EmailService.sendPasswordResetEmail(token)
+  → Resend API
+```
+
+## Key Design Decisions
+
+### Route Shadowing Workaround
+
+`nestjs-better-auth` registers Express-level routes at `/auth/*` that intercept ALL matching requests before they reach NestJS. Custom endpoints that need to live outside Better Auth's scope are placed under `/notifications/` instead of `/auth/`.
+
+### Error Handling
+
+`EmailService` catches and logs all Resend errors without rethrowing — email delivery failures do not break the registration flow. The `NotificationsController` also wraps calls in try/catch to always return `{success: true}`.
+
+## Verification
+
+```bash
+curl -X POST http://localhost:3000/notifications/welcome-email \
+  -H "Content-Type: application/json" \
+  -d '{"email":"user@verified.com","name":"User"}'
+# → {"success":true}
+```
