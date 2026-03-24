@@ -12,14 +12,14 @@ export class UpdateUserUseCase {
 
 	async execute(userId: string, dto: UpdateUserRequestDto): Promise<UpdateUserResponseDto> {
 		if (dto.role === UserRole.AGENT) {
-			if (!dto.tuition || dto.tuition.length < 5) {
-				throw new BadRequestException('Tuition must be at least 5 characters');
+			if (!dto.licenseNumber || dto.licenseNumber.length < 5) {
+				throw new BadRequestException('License number must be at least 5 characters');
 			}
 		}
 
-		const tuitionValue = dto.role === UserRole.AGENT && dto.tuition ? dto.tuition : null;
+		const licenseNumberValue = dto.role === UserRole.AGENT && dto.licenseNumber ? dto.licenseNumber : null;
 
-		const updated = await this.userRepository.updateRole(userId, dto.role, tuitionValue);
+		const updated = await this.userRepository.updateRole(userId, dto.role, licenseNumberValue);
 
 		return UpdateUserResponseDto.fromEntity(updated);
 	}

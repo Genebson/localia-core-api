@@ -29,12 +29,12 @@ src/
 ├── application/                     # Use cases, DTOs, repository interfaces
 │   └── user/
 │       ├── get-user/               # Get user by ID
-│       └── update-user/             # Update user role/tuition
+│       └── update-user/             # Update user role/license_number
 ├── infrastructure/                 # External concerns
 │   ├── auth/
 │   │   └── schema.ts               # Drizzle schema (user, session, account tables)
 │   ├── email/
-│   │   ├── email.service.ts         # Email sending via Resend
+│   │   ├── email.service.ts        # Email sending via Resend
 │   │   └── email.module.ts          # NestJS module
 │   └── repositories/user/
 │       └── user.repository.ts       # Repository implementation
@@ -128,7 +128,7 @@ GET /health
 | Method | Path | Description |
 |--------|------|-------------|
 | GET | `/profile` | Get current user profile |
-| PATCH | `/profile/role` | Update role (seeker ↔ agent) |
+| PATCH | `/profile/role` | Update role (seeker ↔ agent) and license number |
 | POST | `/notifications/welcome-email` | Send welcome email to registered user |
 
 ## Scripts

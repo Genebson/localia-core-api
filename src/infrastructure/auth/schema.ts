@@ -9,7 +9,7 @@ export const user = pgTable('user', {
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
   role: varchar('role', { length: 20 }).default('seeker'),
-  tuition: text('tuition'),
+  licenseNumber: text('license_number'),
 });
 
 export const session = pgTable('session', {

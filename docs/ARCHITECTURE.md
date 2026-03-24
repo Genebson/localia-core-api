@@ -42,7 +42,7 @@ application/user/
 │   ├── get-user.use-case.ts
 │   ├── get-user.repository.interface.ts
 │   └── get-user.response.dto.ts
-└── update-user/                    # Update user role and tuition
+└── update-user/                    # Update user role and license number
     ├── update-user.use-case.ts
     ├── update-user.repository.interface.ts
     ├── update-user.request.dto.ts
@@ -95,7 +95,7 @@ Because Better Auth's Express middleware intercepts ALL `/auth/*` requests, cust
 | Method | Path | Description |
 |--------|------|-------------|
 | GET | `/profile` | Get current user profile |
-| PATCH | `/profile/role` | Update user role (seeker ↔ agent) and tuition |
+| PATCH | `/profile/role` | Update user role (seeker ↔ agent) and license number |
 
 ### Session Cookie
 
@@ -144,7 +144,7 @@ All configuration in `src/config/`:
 | emailVerified | boolean | Default false |
 | image | text | Optional |
 | role | varchar | `seeker` or `agent`, default `seeker` |
-| tuition | text | Agent license number (required if role=agent) |
+| license_number | text | Agent license number (required if role=agent) |
 | createdAt | timestamp | Auto |
 | updatedAt | timestamp | Auto |
 
