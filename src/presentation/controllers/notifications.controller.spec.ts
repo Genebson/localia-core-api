@@ -1,6 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotificationsController } from './notifications.controller.js';
 import { EmailService } from '../../infrastructure/email/email.service.js';
+import { ForgotPasswordUseCase } from '../../application/auth/forgot-password/forgot-password.use-case.js';
+import { auth } from '../../config/database.config.js';
+
+jest.mock('../../config/database.config.js', () => ({
+	auth: {
+		api: {
+			requestPasswordReset: jest.fn(),
+		},
+	},
+}));
 
 describe('NotificationsController', () => {
 	let controller: NotificationsController;
@@ -9,9 +19,14 @@ describe('NotificationsController', () => {
 	beforeEach(async () => {
 		mockEmailService = { sendWelcomeEmail: jest.fn() };
 
+		jest.clearAllMocks();
+
 		const module: TestingModule = await Test.createTestingModule({
 			controllers: [NotificationsController],
-			providers: [{ provide: EmailService, useValue: mockEmailService }],
+			providers: [
+				{ provide: EmailService, useValue: mockEmailService },
+				{ provide: ForgotPasswordUseCase, useValue: { execute: jest.fn() } },
+			],
 		}).compile();
 
 		controller = module.get<NotificationsController>(NotificationsController);
@@ -42,6 +57,27 @@ describe('NotificationsController', () => {
 			mockEmailService.sendWelcomeEmail.mockRejectedValue(new Error('Resend failed'));
 
 			const result = await controller.sendWelcomeEmail(body);
+
+			expect(result).toEqual({ success: true });
+		});
+	});
+
+	describe('POST /notifications/forgot-password', () => {
+		it('should call auth.api.requestPasswordReset with email', async () => {
+			const body = { email: 'test@example.com' };
+			(auth.api.requestPasswordReset as unknown as jest.Mock).mockResolvedValue(undefined);
+
+			const result = await controller.forgotPassword(body);
+
+			expect(auth.api.requestPasswordReset).toHaveBeenCalledWith({ body: { email: 'test@example.com' } });
+			expect(result).toEqual({ success: true });
+		});
+
+		it('should return success for unregistered email (silent success)', async () => {
+			const body = { email: 'nonexistent@example.com' };
+			(auth.api.requestPasswordReset as unknown as jest.Mock).mockResolvedValue(undefined);
+
+			const result = await controller.forgotPassword(body);
 
 			expect(result).toEqual({ success: true });
 		});
