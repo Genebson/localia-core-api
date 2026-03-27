@@ -1,6 +1,7 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
 import { EmailService } from '../../infrastructure/email/email.service.js';
+import { auth } from '../../config/database.config.js';
 
 @Controller('notifications')
 export class NotificationsController {
@@ -12,8 +13,16 @@ export class NotificationsController {
 		try {
 			await this.emailService.sendWelcomeEmail(body.email, body.name ?? 'User');
 		} catch {
-			// Swallow errors to always return success
 		}
+		return { success: true };
+	}
+
+	@Post('forgot-password')
+	@AllowAnonymous()
+	async forgotPassword(@Body() body: { email: string }) {
+		await auth.api.requestPasswordReset({
+			body: { email: body.email },
+		});
 		return { success: true };
 	}
 }

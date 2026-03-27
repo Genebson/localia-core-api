@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotificationsController } from './notifications.controller.js';
 import { EmailService } from '../../infrastructure/email/email.service.js';
-import { ForgotPasswordUseCase } from '../../application/auth/forgot-password/forgot-password.use-case.js';
 import { auth } from '../../config/database.config.js';
 
 jest.mock('../../config/database.config.js', () => ({
@@ -23,10 +22,7 @@ describe('NotificationsController', () => {
 
 		const module: TestingModule = await Test.createTestingModule({
 			controllers: [NotificationsController],
-			providers: [
-				{ provide: EmailService, useValue: mockEmailService },
-				{ provide: ForgotPasswordUseCase, useValue: { execute: jest.fn() } },
-			],
+			providers: [{ provide: EmailService, useValue: mockEmailService }],
 		}).compile();
 
 		controller = module.get<NotificationsController>(NotificationsController);
