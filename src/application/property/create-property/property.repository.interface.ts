@@ -1,0 +1,12 @@
+import { Property } from '../../../domain/entities/property.entity.js';
+
+export const PROPERTY_REPOSITORY_KEY = 'property_repository';
+
+export interface IPropertyRepository {
+	create(property: Property): Promise<Property>;
+	findById(id: string): Promise<Property | null>;
+	findByAgentId(agentId: string): Promise<Property[]>;
+	findAllFeatured(): Promise<Property[]>;
+	update(property: Property): Promise<Property>;
+	delete(id: string): Promise<void>;
+}
