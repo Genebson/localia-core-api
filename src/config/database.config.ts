@@ -2,7 +2,10 @@ import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from '@better-auth/drizzle-adapter';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
-import * as schema from '../infrastructure/auth/schema.js';
+import * as authSchema from '../infrastructure/auth/schema.js';
+import * as propertySchema from '../infrastructure/database/schema.js';
+
+const allSchema = { ...authSchema, ...propertySchema };
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -23,7 +26,7 @@ const sql = postgres({
   database: databaseConfig.dbName,
 });
 
-export const db = drizzle(sql, { schema });
+export const db = drizzle(sql, { schema: allSchema });
 
 export const auth = betterAuth({
 	baseURL: process.env.BETTER_AUTH_URL || 'http://localhost:3000',

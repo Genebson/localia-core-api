@@ -15,6 +15,20 @@
       "when": 1774354450531,
       "tag": "0001_slow_the_anarchist",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1774645553142,
+      "tag": "0002_giant_krista_starr",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1774650101506,
+      "tag": "0003_large_leopardon",
+      "breakpoints": true
     }
   ]
 }
