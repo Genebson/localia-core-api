@@ -54,21 +54,55 @@ application/user/
 ```
 infrastructure/
 ├── auth/schema.ts            # Drizzle schema (user, session, account, verification tables)
+├── database/schema.ts       # Property, User entities with Drizzle
 ├── email/
-│   ├── email.service.ts      # Email sending via Resend (sendWelcomeEmail, sendPasswordResetEmail)
-│   └── email.module.ts       # NestJS module wiring nestjs-resend
-└── repositories/user/user.repository.ts  # Repository implementation
+│   ├── email.service.ts     # Email sending via Resend (sendWelcomeEmail, sendPasswordResetEmail)
+│   └── email.module.ts      # NestJS module wiring nestjs-resend
+└── repositories/
+    ├── user/user.repository.ts
+    └── property/property.repository.ts
 ```
 
 ### Presentation Layer (`presentation/`)
 
 ```
 presentation/controllers/
-├── auth.controller.ts        # /auth/me, /auth/session (Better Auth proxy)
+├── auth.controller.ts       # /auth/me, /auth/session (Better Auth proxy)
 ├── notifications.controller.ts # /notifications/welcome-email (email triggers)
-├── profile.controller.ts     # /profile, /profile/role (custom user endpoints)
-└── health.controller.ts      # /health
+├── profile.controller.ts    # /profile, /profile/role (custom user endpoints)
+├── property.controller.ts   # /property/*, /properties/*
+└── health.controller.ts    # /health
 ```
+
+## Entities
+
+### User Entity
+
+Located in `domain/entities/user.entity.ts`:
+
+- `id`, `email`, `name`, `role` (SEEKER | AGENT)
+- `licenseNumber` (optional, for agents)
+- `createdAt`, `updatedAt`, `deletedAt` (soft delete)
+
+### Property Entity
+
+Located in `domain/entities/property.entity.ts`:
+
+- **Core**: `id`, `title`, `description`, `operation` (buy | rent)
+- **Type**: `propertyType` (apartment, house, penthouse, terrain, etc.)
+- **Pricing**: `price`, `currency` (USD | ARS)
+- **Location**: `location`, `address`, `lat`, `lng`
+- **Attributes**: `bedrooms`, `bathrooms`, `area`
+- **Media**: `images` (array), `image` (thumbnail)
+- **Status**: `featured`, `published`, `publishedAt`
+- **Extended Fields**:
+  - `listingCode` - public listing code
+  - `condition` - new | good | needs-renovation
+  - `furnishings` - furnished | equipped-kitchen
+  - `isFinancingEligible` - "Apto Crédito"
+  - Feature booleans: `petFriendly`, `airConditioning`, `elevator`, `balcony`, `outdoor`, `garage`, `garden`, `pool`, `storageRoom`, `accessible`
+- **Distribution**: `distributedTo` (zonaprop, argenprop, mercadolibre)
+- **Timestamps**: `createdAt`, `updatedAt`, `deletedAt` (soft delete)
 
 ## Authentication Flow
 

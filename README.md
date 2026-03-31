@@ -131,6 +131,17 @@ GET /health
 | PATCH | `/profile/role` | Update role (seeker ↔ agent) and license number |
 | POST | `/notifications/welcome-email` | Send welcome email to registered user |
 
+### Properties
+
+| Method | Path | Description | Auth |
+|--------|------|-------------|------|
+| GET | `/properties/featured` | List featured properties (paginated) | Public |
+| GET | `/property/:id` | Get property by ID | Public |
+| POST | `/property` | Create new property | Required |
+| PUT | `/property/:id` | Update property | Required |
+| DELETE | `/property/:id` | Delete property (soft delete) | Required |
+| GET | `/properties` | List agent's properties | Required |
+
 ## Scripts
 
 | Command | Description |
