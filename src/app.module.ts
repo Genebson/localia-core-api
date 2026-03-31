@@ -18,6 +18,7 @@ import { PROPERTY_REPOSITORY_KEY } from './application/property/create-property/
 import { GetUserUseCase } from './application/user/get-user/get-user.use-case.js';
 import { UpdateUserUseCase } from './application/user/update-user/update-user.use-case.js';
 import { CreatePropertyUseCase } from './application/property/create-property/create-property.use-case.js';
+import { ListAllPropertiesUseCase } from './application/property/list-all-properties/list-all-properties.use-case.js';
 import { ListMyPropertiesUseCase } from './application/property/list-my-properties/list-my-properties.use-case.js';
 import { UpdatePropertyUseCase } from './application/property/update-property/update-property.use-case.js';
 import { DeletePropertyUseCase } from './application/property/delete-property/delete-property.use-case.js';
@@ -65,6 +66,7 @@ const propertyRepositoryProvider: Provider = {
 		GetUserUseCase,
 		UpdateUserUseCase,
 		CreatePropertyUseCase,
+		ListAllPropertiesUseCase,
 		ListMyPropertiesUseCase,
 		UpdatePropertyUseCase,
 		DeletePropertyUseCase,
