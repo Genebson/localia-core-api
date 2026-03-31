@@ -44,6 +44,8 @@ describe('UpdatePropertyUseCase', () => {
 			findById: jest.fn(),
 			findByAgentId: jest.fn(),
 			findAllFeatured: jest.fn(),
+			findAllFeaturedPaginated: jest.fn(),
+			countAllFeatured: jest.fn(),
 			update: jest.fn(),
 			delete: jest.fn(),
 		};
