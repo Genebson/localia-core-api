@@ -118,6 +118,25 @@ export class PropertyRepository implements IPropertyRepository {
 		return rows.filter((row) => !row.deletedAt).map((row) => this.rowToEntity(row));
 	}
 
+	async findAllFeaturedPaginated(page: number, limit: number): Promise<Property[]> {
+		const offset = (page - 1) * limit;
+		const rows = await db
+			.select()
+			.from(property)
+			.where(eq(property.featured, true))
+			.limit(limit)
+			.offset(offset);
+		return rows.filter((row) => !row.deletedAt).map((row) => this.rowToEntity(row));
+	}
+
+	async countAllFeatured(): Promise<number> {
+		const rows = await db
+			.select()
+			.from(property)
+			.where(eq(property.featured, true));
+		return rows.filter((row) => !row.deletedAt).length;
+	}
+
 	async delete(id: string): Promise<void> {
 		await db
 			.update(property)

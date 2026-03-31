@@ -7,6 +7,8 @@ export interface IPropertyRepository {
 	findById(id: string): Promise<Property | null>;
 	findByAgentId(agentId: string): Promise<Property[]>;
 	findAllFeatured(): Promise<Property[]>;
+	findAllFeaturedPaginated(page: number, limit: number): Promise<Property[]>;
+	countAllFeatured(): Promise<number>;
 	update(property: Property): Promise<Property>;
 	delete(id: string): Promise<void>;
 }

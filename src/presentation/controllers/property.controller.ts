@@ -1,9 +1,11 @@
-import { Controller, Post, Get, Put, Delete, Param, Body } from '@nestjs/common';
+import { Controller, Post, Get, Put, Delete, Param, Body, Query } from '@nestjs/common';
 import { Session, UserSession, AllowAnonymous } from '@thallesp/nestjs-better-auth';
 import { CreatePropertyUseCase } from '../../application/property/create-property/create-property.use-case.js';
 import { CreatePropertyRequestDto } from '../../application/property/create-property/create-property.request.dto.js';
 import { ListMyPropertiesUseCase } from '../../application/property/list-my-properties/list-my-properties.use-case.js';
 import { ListFeaturedPropertiesUseCase } from '../../application/property/list-featured-properties/list-featured-properties.use-case.js';
+import { ListFeaturedPropertiesRequestDto } from '../../application/property/list-featured-properties/list-featured-properties.request.dto.js';
+import { PaginatedPropertiesResponseDto } from '../../application/property/list-featured-properties/list-featured-properties.response.dto.js';
 import { UpdatePropertyUseCase } from '../../application/property/update-property/update-property.use-case.js';
 import { UpdatePropertyRequestDto } from '../../application/property/update-property/update-property.request.dto.js';
 import { DeletePropertyUseCase } from '../../application/property/delete-property/delete-property.use-case.js';
@@ -22,8 +24,10 @@ export class PropertyController {
 
 	@AllowAnonymous()
 	@Get('properties/featured')
-	async listFeatured() {
-		return this.listFeaturedPropertiesUseCase.execute();
+	async listFeatured(
+		@Query() query: ListFeaturedPropertiesRequestDto,
+	): Promise<PaginatedPropertiesResponseDto> {
+		return this.listFeaturedPropertiesUseCase.execute(query.page ?? 1, query.limit ?? 12);
 	}
 
 	@Post('property')
