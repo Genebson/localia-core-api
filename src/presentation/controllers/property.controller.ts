@@ -3,6 +3,7 @@ import { Session, UserSession, AllowAnonymous } from '@thallesp/nestjs-better-au
 import { CreatePropertyUseCase } from '../../application/property/create-property/create-property.use-case.js';
 import { CreatePropertyRequestDto } from '../../application/property/create-property/create-property.request.dto.js';
 import { ListMyPropertiesUseCase } from '../../application/property/list-my-properties/list-my-properties.use-case.js';
+import { ListAllPropertiesUseCase } from '../../application/property/list-all-properties/list-all-properties.use-case.js';
 import { ListFeaturedPropertiesUseCase } from '../../application/property/list-featured-properties/list-featured-properties.use-case.js';
 import { ListFeaturedPropertiesRequestDto } from '../../application/property/list-featured-properties/list-featured-properties.request.dto.js';
 import { PaginatedPropertiesResponseDto } from '../../application/property/list-featured-properties/list-featured-properties.response.dto.js';
@@ -16,6 +17,7 @@ export class PropertyController {
 	constructor(
 		private readonly createPropertyUseCase: CreatePropertyUseCase,
 		private readonly listMyPropertiesUseCase: ListMyPropertiesUseCase,
+		private readonly listAllPropertiesUseCase: ListAllPropertiesUseCase,
 		private readonly listFeaturedPropertiesUseCase: ListFeaturedPropertiesUseCase,
 		private readonly updatePropertyUseCase: UpdatePropertyUseCase,
 		private readonly deletePropertyUseCase: DeletePropertyUseCase,
@@ -23,11 +25,17 @@ export class PropertyController {
 	) {}
 
 	@AllowAnonymous()
-	@Get('properties/featured')
-	async listFeatured(
+	@Get('properties')
+	async listAll(
 		@Query() query: ListFeaturedPropertiesRequestDto,
 	): Promise<PaginatedPropertiesResponseDto> {
-		return this.listFeaturedPropertiesUseCase.execute(query.page ?? 1, query.limit ?? 12);
+		return this.listAllPropertiesUseCase.execute(query.page ?? 1, query.limit ?? 12);
+	}
+
+	@Get('my-properties')
+	async listMy(@Session() session: UserSession) {
+		if (!session?.user?.id) throw new Error('Not authenticated');
+		return this.listMyPropertiesUseCase.execute(session.user.id);
 	}
 
 	@Post('property')
@@ -37,12 +45,6 @@ export class PropertyController {
 	) {
 		if (!session?.user?.id) throw new Error('Not authenticated');
 		return this.createPropertyUseCase.execute(session.user.id, dto);
-	}
-
-	@Get('properties')
-	async list(@Session() session: UserSession) {
-		if (!session?.user?.id) throw new Error('Not authenticated');
-		return this.listMyPropertiesUseCase.execute(session.user.id);
 	}
 
 	@AllowAnonymous()
