@@ -4,9 +4,8 @@ import { CreatePropertyUseCase } from '../../application/property/create-propert
 import { CreatePropertyRequestDto } from '../../application/property/create-property/create-property.request.dto.js';
 import { ListMyPropertiesUseCase } from '../../application/property/list-my-properties/list-my-properties.use-case.js';
 import { ListAllPropertiesUseCase } from '../../application/property/list-all-properties/list-all-properties.use-case.js';
-import { ListFeaturedPropertiesUseCase } from '../../application/property/list-featured-properties/list-featured-properties.use-case.js';
-import { ListFeaturedPropertiesRequestDto } from '../../application/property/list-featured-properties/list-featured-properties.request.dto.js';
-import { PaginatedPropertiesResponseDto } from '../../application/property/list-featured-properties/list-featured-properties.response.dto.js';
+import { ListAllPropertiesRequestDto } from '../../application/property/list-all-properties/list-all-properties.request.dto.js';
+import { PaginatedPropertiesResponseDto } from '../../application/property/list-all-properties/list-all-properties.response.dto.js';
 import { UpdatePropertyUseCase } from '../../application/property/update-property/update-property.use-case.js';
 import { UpdatePropertyRequestDto } from '../../application/property/update-property/update-property.request.dto.js';
 import { DeletePropertyUseCase } from '../../application/property/delete-property/delete-property.use-case.js';
@@ -18,7 +17,6 @@ export class PropertyController {
 		private readonly createPropertyUseCase: CreatePropertyUseCase,
 		private readonly listMyPropertiesUseCase: ListMyPropertiesUseCase,
 		private readonly listAllPropertiesUseCase: ListAllPropertiesUseCase,
-		private readonly listFeaturedPropertiesUseCase: ListFeaturedPropertiesUseCase,
 		private readonly updatePropertyUseCase: UpdatePropertyUseCase,
 		private readonly deletePropertyUseCase: DeletePropertyUseCase,
 		private readonly getPropertyUseCase: GetPropertyUseCase,
@@ -27,7 +25,7 @@ export class PropertyController {
 	@AllowAnonymous()
 	@Get('properties')
 	async listAll(
-		@Query() query: ListFeaturedPropertiesRequestDto,
+		@Query() query: ListAllPropertiesRequestDto,
 	): Promise<PaginatedPropertiesResponseDto> {
 		return this.listAllPropertiesUseCase.execute(query.page ?? 1, query.limit ?? 12);
 	}

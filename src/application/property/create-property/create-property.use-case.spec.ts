@@ -14,9 +14,6 @@ describe('CreatePropertyUseCase', () => {
 			findByAgentId: jest.fn(),
 			findAllPaginated: jest.fn(),
 			countAll: jest.fn(),
-			findAllFeatured: jest.fn(),
-			findAllFeaturedPaginated: jest.fn(),
-			countAllFeatured: jest.fn(),
 			update: jest.fn(),
 			delete: jest.fn(),
 		};

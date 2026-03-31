@@ -110,14 +110,6 @@ export class PropertyRepository implements IPropertyRepository {
 		return this.rowToEntity(row);
 	}
 
-	async findAllFeatured(): Promise<Property[]> {
-		const rows = await db
-			.select()
-			.from(property)
-			.where(eq(property.featured, true));
-		return rows.filter((row) => !row.deletedAt).map((row) => this.rowToEntity(row));
-	}
-
 	async findAllPaginated(page: number, limit: number): Promise<Property[]> {
 		const allRows = await db.select().from(property);
 		const activeRows = allRows.filter((row) => !row.deletedAt && row.published !== false);
@@ -129,14 +121,6 @@ export class PropertyRepository implements IPropertyRepository {
 	async countAll(): Promise<number> {
 		const rows = await db.select().from(property);
 		return rows.filter((row) => !row.deletedAt && row.published !== false).length;
-	}
-
-	async countAllFeatured(): Promise<number> {
-		const rows = await db
-			.select()
-			.from(property)
-			.where(eq(property.featured, true));
-		return rows.filter((row) => !row.deletedAt).length;
 	}
 
 	async delete(id: string): Promise<void> {

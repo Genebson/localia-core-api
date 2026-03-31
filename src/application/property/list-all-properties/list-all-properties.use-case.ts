@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { IPropertyRepository, PROPERTY_REPOSITORY_KEY } from '../create-property/property.repository.interface.js';
 import { PropertyResponseDto } from '../create-property/create-property.response.dto.js';
-import { PaginatedPropertiesResponseDto } from '../list-featured-properties/list-featured-properties.response.dto.js';
+import { PaginatedPropertiesResponseDto } from './list-all-properties.response.dto.js';
 
 @Injectable()
 export class ListAllPropertiesUseCase {
