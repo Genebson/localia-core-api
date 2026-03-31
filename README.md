@@ -135,12 +135,12 @@ GET /health
 
 | Method | Path | Description | Auth |
 |--------|------|-------------|------|
-| GET | `/properties/featured` | List featured properties (paginated) | Public |
+| GET | `/properties` | List all published properties (paginated) | Public |
 | GET | `/property/:id` | Get property by ID | Public |
 | POST | `/property` | Create new property | Required |
 | PUT | `/property/:id` | Update property | Required |
 | DELETE | `/property/:id` | Delete property (soft delete) | Required |
-| GET | `/properties` | List agent's properties | Required |
+| GET | `/my-properties` | List agent's own properties | Required |
 
 ## Scripts
 

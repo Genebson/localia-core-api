@@ -29,10 +29,10 @@ export class PaginatedPropertiesResponseDto {
 		const totalPages = Math.ceil(totalItems / limit);
 		const links = new LinksDto(
 			page > 1
-				? new LinkDto(`/properties/featured?page=${page - 1}&limit=${limit}`)
+				? new LinkDto(`/properties?page=${page - 1}&limit=${limit}`)
 				: undefined,
 			page < totalPages
-				? new LinkDto(`/properties/featured?page=${page + 1}&limit=${limit}`)
+				? new LinkDto(`/properties?page=${page + 1}&limit=${limit}`)
 				: undefined,
 		);
 		return new PaginatedPropertiesResponseDto(page, totalItems, totalPages, items, links);
