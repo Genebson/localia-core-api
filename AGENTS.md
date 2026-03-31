@@ -198,3 +198,36 @@ Your comprehensive architectural guidelines and domain knowledge are located in 
 
 - _When to read them:_ If you are implementing a new feature, making structural changes, or are unsure about the specific implementation details of a domain, you MUST read the relevant files in docs/\*.md before writing code.
 - _When to skip them:_ For minor bug fixes, typos, or localized refactoring within a single file, rely on your general knowledge to save context window.
+
+## Obsidian Sprint Board
+
+Project state is tracked in /Users/mauriciogenebrieres/Documents/Obsidian Vault/Localia.md — structured as a sprint board with tickets organized by date.
+
+### End-of-Day Protocol (MANDATORY)
+
+When the user says "end of day", "wrap up", or similar, you MUST:
+
+1. _Read the vault_ — read(/Users/mauriciogenebrieres/Documents/Obsidian Vault/Localia.md)
+2. _Inspect git state_ — git log --oneline -10 and git status on both localia/ and localia-core-api/
+3. _Verify test status_ — run npm test on localia/ to confirm pass/fail count
+4. _Update the vault_ — mark completed tickets, move in-progress to done or to next sprint, note blockers, update sprint board dates
+5. _Commit if needed_ — if changes exist but weren't committed (user may want to review first), note them in vault but do not push without permission
+
+### Vault Path
+
+/Users/mauriciogenebrieres/Documents/Obsidian Vault/Localia.md
+
+### Ticket ID Format
+
+Prefix all ticket references with project scope:
+
+- FE- frontend tickets (e.g., FE-001, FE-002)
+- BE- backend tickets (e.g., BE-001, BE-002)
+- AUTH- auth tickets
+- FE-FAV- favorites-specific tickets
+
+### Sprint Cadence
+
+- Sprint 1: March 25, 2026
+- Sprint 2: March 26, 2026
+- Sprint N: rolling — any unfinished items carry forward to the next day

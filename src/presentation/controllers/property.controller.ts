@@ -1,5 +1,5 @@
 import { Controller, Post, Get, Put, Delete, Param, Body } from '@nestjs/common';
-import { Session, UserSession } from '@thallesp/nestjs-better-auth';
+import { Session, UserSession, AllowAnonymous } from '@thallesp/nestjs-better-auth';
 import { CreatePropertyUseCase } from '../../application/property/create-property/create-property.use-case.js';
 import { CreatePropertyRequestDto } from '../../application/property/create-property/create-property.request.dto.js';
 import { ListMyPropertiesUseCase } from '../../application/property/list-my-properties/list-my-properties.use-case.js';
@@ -20,6 +20,7 @@ export class PropertyController {
 		private readonly getPropertyUseCase: GetPropertyUseCase,
 	) {}
 
+	@AllowAnonymous()
 	@Get('properties/featured')
 	async listFeatured() {
 		return this.listFeaturedPropertiesUseCase.execute();
@@ -40,10 +41,10 @@ export class PropertyController {
 		return this.listMyPropertiesUseCase.execute(session.user.id);
 	}
 
+	@AllowAnonymous()
 	@Get('property/:id')
-	async get(@Session() session: UserSession, @Param('id') id: string) {
-		if (!session?.user?.id) throw new Error('Not authenticated');
-		return this.getPropertyUseCase.execute(id, session.user.id);
+	async get(@Param('id') id: string) {
+		return this.getPropertyUseCase.execute(id);
 	}
 
 	@Put('property/:id')

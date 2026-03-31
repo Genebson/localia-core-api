@@ -1,4 +1,4 @@
-import { Inject, Injectable, ForbiddenException, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Property } from '../../../domain/entities/property.entity.js';
 import { IPropertyRepository, PROPERTY_REPOSITORY_KEY } from './property.repository.interface.js';
 import { CreatePropertyRequestDto } from './create-property.request.dto.js';
@@ -26,7 +26,23 @@ export class CreatePropertyUseCase {
 			address: dto.address,
 			attributes: dto.attributes,
 			images: dto.images ?? [],
-			featured: dto.featured ?? true,
+			featured: dto.featured ?? false,
+			published: dto.published ?? true,
+			listingCode: dto.listingCode,
+			isFinancingEligible: dto.isFinancingEligible ?? false,
+			petFriendly: dto.petFriendly ?? false,
+			airConditioning: dto.airConditioning ?? false,
+			elevator: dto.elevator ?? false,
+			balcony: dto.balcony ?? false,
+			outdoor: dto.outdoor ?? false,
+			garage: dto.garage ?? false,
+			garden: dto.garden ?? false,
+			pool: dto.pool ?? false,
+			storageRoom: dto.storageRoom ?? false,
+			accessible: dto.accessible ?? false,
+			condition: dto.condition ?? null,
+			furnishings: dto.furnishings ?? null,
+			distributedTo: dto.distributedTo ?? [],
 			agentId,
 		});
 
