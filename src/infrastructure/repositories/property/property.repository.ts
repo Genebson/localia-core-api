@@ -28,6 +28,23 @@ export class PropertyRepository implements IPropertyRepository {
 				area: prop.attributes.area,
 				images: prop.images,
 				featured: prop.featured,
+				published: prop.published,
+				publishedAt: prop.publishedAt,
+				listingCode: prop.listingCode,
+				isFinancingEligible: prop.isFinancingEligible,
+				petFriendly: prop.petFriendly,
+				airConditioning: prop.airConditioning,
+				elevator: prop.elevator,
+				balcony: prop.balcony,
+				outdoor: prop.outdoor,
+				garage: prop.garage,
+				garden: prop.garden,
+				pool: prop.pool,
+				storageRoom: prop.storageRoom,
+				accessible: prop.accessible,
+				condition: prop.condition,
+				furnishings: prop.furnishings,
+				distributedTo: prop.distributedTo,
 				agentId: prop.agentId,
 			})
 			.returning();
@@ -49,9 +66,7 @@ export class PropertyRepository implements IPropertyRepository {
 			.select()
 			.from(property)
 			.where(eq(property.agentId, agentId));
-		return rows
-			.filter((row) => !row.deletedAt)
-			.map((row) => this.rowToEntity(row));
+		return rows.filter((row) => !row.deletedAt).map((row) => this.rowToEntity(row));
 	}
 
 	async update(prop: Property): Promise<Property> {
@@ -71,6 +86,23 @@ export class PropertyRepository implements IPropertyRepository {
 				area: prop.attributes.area,
 				images: prop.images,
 				featured: prop.featured,
+				published: prop.published,
+				publishedAt: prop.publishedAt,
+				listingCode: prop.listingCode,
+				isFinancingEligible: prop.isFinancingEligible,
+				petFriendly: prop.petFriendly,
+				airConditioning: prop.airConditioning,
+				elevator: prop.elevator,
+				balcony: prop.balcony,
+				outdoor: prop.outdoor,
+				garage: prop.garage,
+				garden: prop.garden,
+				pool: prop.pool,
+				storageRoom: prop.storageRoom,
+				accessible: prop.accessible,
+				condition: prop.condition,
+				furnishings: prop.furnishings,
+				distributedTo: prop.distributedTo,
 				updatedAt: new Date(),
 			})
 			.where(eq(property.id, prop.id))
@@ -83,9 +115,7 @@ export class PropertyRepository implements IPropertyRepository {
 			.select()
 			.from(property)
 			.where(eq(property.featured, true));
-		return rows
-			.filter((row) => !row.deletedAt)
-			.map((row) => this.rowToEntity(row));
+		return rows.filter((row) => !row.deletedAt).map((row) => this.rowToEntity(row));
 	}
 
 	async delete(id: string): Promise<void> {
@@ -111,6 +141,23 @@ export class PropertyRepository implements IPropertyRepository {
 			area: row.area ?? 0,
 			images: row.images ?? [],
 			featured: row.featured ?? false,
+			published: row.published ?? true,
+			publishedAt: row.publishedAt ?? null,
+			listingCode: row.listingCode ?? null,
+			isFinancingEligible: row.isFinancingEligible ?? false,
+			petFriendly: row.petFriendly ?? false,
+			airConditioning: row.airConditioning ?? false,
+			elevator: row.elevator ?? false,
+			balcony: row.balcony ?? false,
+			outdoor: row.outdoor ?? false,
+			garage: row.garage ?? false,
+			garden: row.garden ?? false,
+			pool: row.pool ?? false,
+			storageRoom: row.storageRoom ?? false,
+			accessible: row.accessible ?? false,
+			condition: row.condition ?? null,
+			furnishings: row.furnishings ?? null,
+			distributedTo: row.distributedTo ?? [],
 			agentId: row.agentId,
 			createdAt: row.createdAt ?? new Date(),
 			updatedAt: row.updatedAt ?? new Date(),
