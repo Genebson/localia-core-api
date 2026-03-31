@@ -119,14 +119,14 @@ export class PropertyRepository implements IPropertyRepository {
 	}
 
 	async findAllFeaturedPaginated(page: number, limit: number): Promise<Property[]> {
-		const offset = (page - 1) * limit;
-		const rows = await db
+		const allRows = await db
 			.select()
 			.from(property)
-			.where(eq(property.featured, true))
-			.limit(limit)
-			.offset(offset);
-		return rows.filter((row) => !row.deletedAt).map((row) => this.rowToEntity(row));
+			.where(eq(property.featured, true));
+		const activeRows = allRows.filter((row) => !row.deletedAt);
+		const offset = (page - 1) * limit;
+		const paginatedRows = activeRows.slice(offset, offset + limit);
+		return paginatedRows.map((row) => this.rowToEntity(row));
 	}
 
 	async countAllFeatured(): Promise<number> {
