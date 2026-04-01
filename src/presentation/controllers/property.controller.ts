@@ -3,6 +3,7 @@ import { Session, UserSession, AllowAnonymous } from '@thallesp/nestjs-better-au
 import { CreatePropertyUseCase } from '../../application/property/create-property/create-property.use-case.js';
 import { CreatePropertyRequestDto } from '../../application/property/create-property/create-property.request.dto.js';
 import { ListMyPropertiesUseCase } from '../../application/property/list-my-properties/list-my-properties.use-case.js';
+import { ListMyPropertiesRequestDto } from '../../application/property/list-my-properties/list-my-properties.request.dto.js';
 import { ListAllPropertiesUseCase } from '../../application/property/list-all-properties/list-all-properties.use-case.js';
 import { ListAllPropertiesRequestDto } from '../../application/property/list-all-properties/list-all-properties.request.dto.js';
 import { PaginatedPropertiesResponseDto } from '../../application/property/list-all-properties/list-all-properties.response.dto.js';
@@ -31,9 +32,9 @@ export class PropertyController {
 	}
 
 	@Get('my-properties')
-	async listMy(@Session() session: UserSession) {
+	async listMy(@Session() session: UserSession, @Query() query: ListMyPropertiesRequestDto) {
 		if (!session?.user?.id) throw new Error('Not authenticated');
-		return this.listMyPropertiesUseCase.execute(session.user.id);
+		return this.listMyPropertiesUseCase.execute(session.user.id, query);
 	}
 
 	@Post('property')

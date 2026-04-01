@@ -6,6 +6,12 @@ export interface IPropertyRepository {
 	create(property: Property): Promise<Property>;
 	findById(id: string): Promise<Property | null>;
 	findByAgentId(agentId: string): Promise<Property[]>;
+	findByAgentIdPaginated(
+		agentId: string,
+		page: number,
+		limit: number,
+		sort: 'asc' | 'desc',
+	): Promise<{ properties: Property[]; total: number }>;
 	findAllPaginated(page: number, limit: number): Promise<Property[]>;
 	countAll(): Promise<number>;
 	update(property: Property): Promise<Property>;
