@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, varchar, integer, boolean } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, varchar, integer, boolean, uniqueIndex } from 'drizzle-orm/pg-core';
 
 export const property = pgTable('property', {
 	id: varchar('id', { length: 255 }).primaryKey(),
@@ -49,3 +49,12 @@ export const user = pgTable('user', {
 	role: varchar('role', { length: 20 }).default('seeker'),
 	licenseNumber: text('license_number'),
 });
+
+export const favorite = pgTable('favorite', {
+	id: varchar('id', { length: 255 }).primaryKey(),
+	userId: varchar('user_id', { length: 255 }).notNull(),
+	propertyId: varchar('property_id', { length: 255 }).notNull(),
+	createdAt: timestamp('created_at').defaultNow(),
+}, (table) => ({
+	userPropertyUnique: uniqueIndex('favorite_user_property_unique').on(table.userId, table.propertyId),
+}));
