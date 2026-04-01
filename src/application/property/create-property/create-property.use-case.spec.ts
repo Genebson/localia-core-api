@@ -12,6 +12,7 @@ describe('CreatePropertyUseCase', () => {
 			create: jest.fn(),
 			findById: jest.fn(),
 			findByAgentId: jest.fn(),
+			findByAgentIdPaginated: jest.fn(),
 			findAllPaginated: jest.fn(),
 			countAll: jest.fn(),
 			update: jest.fn(),
