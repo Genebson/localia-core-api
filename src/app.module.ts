@@ -7,6 +7,7 @@ import { ProfileController } from './presentation/controllers/profile.controller
 import { NotificationsController } from './presentation/controllers/notifications.controller.js';
 import { PropertyController } from './presentation/controllers/property.controller.js';
 import { UploadController } from './presentation/controllers/upload.controller.js';
+import { UsersController } from './presentation/controllers/users.controller.js';
 import { AuthModule } from '@thallesp/nestjs-better-auth';
 import { auth } from './config/database.config.js';
 import { UserRepository } from './infrastructure/repositories/user/user.repository.js';
@@ -18,7 +19,12 @@ import { UPDATE_USER_REPOSITORY_KEY } from './application/user/update-user/updat
 import { PROPERTY_REPOSITORY_KEY } from './application/property/create-property/property.repository.interface.js';
 import { FAVORITE_REPOSITORY_KEY } from './application/favorite/add-favorite/favorite.repository.interface.js';
 import { GetUserUseCase } from './application/user/get-user/get-user.use-case.js';
+import { GetPublicUserUseCase } from './application/user/get-user/get-public-user.use-case.js';
 import { UpdateUserUseCase } from './application/user/update-user/update-user.use-case.js';
+import { UpdateProfileUseCase } from './application/user/update-user/update-profile.use-case.js';
+import { UploadUserImageUseCase } from './application/user/upload-user-image/upload-user-image.use-case.js';
+import { UpdateRentalProfileUseCase } from './application/user/update-user/update-rental-profile.use-case.js';
+import { UpdateIntroductionLetterUseCase } from './application/user/update-user/update-introduction-letter.use-case.js';
 import { CreatePropertyUseCase } from './application/property/create-property/create-property.use-case.js';
 import { ListAllPropertiesUseCase } from './application/property/list-all-properties/list-all-properties.use-case.js';
 import { ListMyPropertiesUseCase } from './application/property/list-my-properties/list-my-properties.use-case.js';
@@ -30,6 +36,8 @@ import { AddFavoriteUseCase } from './application/favorite/add-favorite/add-favo
 import { RemoveFavoriteUseCase } from './application/favorite/remove-favorite/remove-favorite.use-case.js';
 import { ListFavoritesUseCase } from './application/favorite/list-favorites/list-favorites.use-case.js';
 import { FavoritesController } from './presentation/controllers/favorites.controller.js';
+import { SendEmailToAgentUseCase } from './application/contact/send-email-to-agent/send-email-to-agent.use-case.js';
+import { ContactController } from './presentation/controllers/contact.controller.js';
 
 const getUserRepositoryProvider: Provider = {
 	provide: GET_USER_REPOSITORY_KEY,
@@ -70,6 +78,8 @@ const favoriteRepositoryProvider: Provider = {
 		PropertyController,
 		UploadController,
 		FavoritesController,
+		UsersController,
+		ContactController,
 	],
 	providers: [
 		getUserRepositoryProvider,
@@ -77,7 +87,12 @@ const favoriteRepositoryProvider: Provider = {
 		propertyRepositoryProvider,
 		favoriteRepositoryProvider,
 		GetUserUseCase,
+		GetPublicUserUseCase,
 		UpdateUserUseCase,
+		UpdateProfileUseCase,
+		UploadUserImageUseCase,
+		UpdateRentalProfileUseCase,
+		UpdateIntroductionLetterUseCase,
 		CreatePropertyUseCase,
 		ListAllPropertiesUseCase,
 		ListMyPropertiesUseCase,
@@ -88,6 +103,7 @@ const favoriteRepositoryProvider: Provider = {
 		AddFavoriteUseCase,
 		RemoveFavoriteUseCase,
 		ListFavoritesUseCase,
+		SendEmailToAgentUseCase,
 	],
 })
 export class AppModule {}

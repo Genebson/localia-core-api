@@ -20,7 +20,7 @@ export class UserRepository implements IGetUserRepository, IUpdateUserRepository
 			return null;
 		}
 
-		return new User(
+		const user = new User(
 			foundUser.id,
 			foundUser.email,
 			foundUser.name,
@@ -31,6 +31,13 @@ export class UserRepository implements IGetUserRepository, IUpdateUserRepository
 			foundUser.createdAt ?? undefined,
 			foundUser.updatedAt ?? undefined,
 		);
+		user.phone = foundUser.phone ?? null;
+		user.tenantCount = foundUser.tenantCount ?? 1;
+		user.pets = (foundUser.pets as 'none' | 'has_pet') ?? 'none';
+		user.moveDate = (foundUser.moveDate as 'asap' | 'flexible' | 'exact_date') ?? 'flexible';
+		user.monthlyIncome = foundUser.monthlyIncome ?? null;
+		user.introductionLetter = foundUser.introductionLetter ?? null;
+		return user;
 	}
 
 	async updateRole(id: string, role: UserRole, licenseNumber: string | null): Promise<User> {
@@ -43,7 +50,7 @@ export class UserRepository implements IGetUserRepository, IUpdateUserRepository
 			.where(eq(userSchema.id, id))
 			.returning();
 
-		return new User(
+		const user = new User(
 			updatedUser.id,
 			updatedUser.email,
 			updatedUser.name,
@@ -54,5 +61,126 @@ export class UserRepository implements IGetUserRepository, IUpdateUserRepository
 			updatedUser.createdAt ?? undefined,
 			updatedUser.updatedAt ?? undefined,
 		);
+		user.phone = updatedUser.phone ?? null;
+		user.tenantCount = updatedUser.tenantCount ?? 1;
+		user.pets = (updatedUser.pets as 'none' | 'has_pet') ?? 'none';
+		user.moveDate = (updatedUser.moveDate as 'asap' | 'flexible' | 'exact_date') ?? 'flexible';
+		user.monthlyIncome = updatedUser.monthlyIncome ?? null;
+		user.introductionLetter = updatedUser.introductionLetter ?? null;
+		return user;
+	}
+
+	async updateImage(id: string, image: string): Promise<User> {
+		const [updatedUser] = await db
+			.update(userSchema)
+			.set({ image })
+			.where(eq(userSchema.id, id))
+			.returning();
+
+		const user = new User(
+			updatedUser.id,
+			updatedUser.email,
+			updatedUser.name,
+			updatedUser.emailVerified ?? false,
+			updatedUser.image,
+			updatedUser.role as UserRole,
+			updatedUser.licenseNumber,
+			updatedUser.createdAt ?? undefined,
+			updatedUser.updatedAt ?? undefined,
+		);
+		user.phone = updatedUser.phone ?? null;
+		user.tenantCount = updatedUser.tenantCount ?? 1;
+		user.pets = (updatedUser.pets as 'none' | 'has_pet') ?? 'none';
+		user.moveDate = (updatedUser.moveDate as 'asap' | 'flexible' | 'exact_date') ?? 'flexible';
+		user.monthlyIncome = updatedUser.monthlyIncome ?? null;
+		user.introductionLetter = updatedUser.introductionLetter ?? null;
+		return user;
+	}
+
+	async updateNameAndPhone(id: string, name: string, phone: string): Promise<User> {
+		const [updatedUser] = await db
+			.update(userSchema)
+			.set({ name, phone })
+			.where(eq(userSchema.id, id))
+			.returning();
+
+		const user = new User(
+			updatedUser.id,
+			updatedUser.email,
+			updatedUser.name,
+			updatedUser.emailVerified ?? false,
+			updatedUser.image,
+			updatedUser.role as UserRole,
+			updatedUser.licenseNumber,
+			updatedUser.createdAt ?? undefined,
+			updatedUser.updatedAt ?? undefined,
+		);
+		user.phone = updatedUser.phone ?? null;
+		user.tenantCount = updatedUser.tenantCount ?? 1;
+		user.pets = (updatedUser.pets as 'none' | 'has_pet') ?? 'none';
+		user.moveDate = (updatedUser.moveDate as 'asap' | 'flexible' | 'exact_date') ?? 'flexible';
+		user.monthlyIncome = updatedUser.monthlyIncome ?? null;
+		user.introductionLetter = updatedUser.introductionLetter ?? null;
+		return user;
+	}
+
+	async updateRentalProfile(
+		id: string,
+		tenantCount: number,
+		pets: string,
+		moveDate: string,
+		monthlyIncome: number | null,
+	): Promise<User> {
+		const [updatedUser] = await db
+			.update(userSchema)
+			.set({ tenantCount, pets, moveDate, monthlyIncome })
+			.where(eq(userSchema.id, id))
+			.returning();
+
+		const user = new User(
+			updatedUser.id,
+			updatedUser.email,
+			updatedUser.name,
+			updatedUser.emailVerified ?? false,
+			updatedUser.image,
+			updatedUser.role as UserRole,
+			updatedUser.licenseNumber,
+			updatedUser.createdAt ?? undefined,
+			updatedUser.updatedAt ?? undefined,
+		);
+		user.phone = updatedUser.phone ?? null;
+		user.tenantCount = updatedUser.tenantCount ?? 1;
+		user.pets = (updatedUser.pets as 'none' | 'has_pet') ?? 'none';
+		user.moveDate = (updatedUser.moveDate as 'asap' | 'flexible' | 'exact_date') ?? 'flexible';
+		user.monthlyIncome = updatedUser.monthlyIncome ?? null;
+		user.introductionLetter = updatedUser.introductionLetter ?? null;
+		return user;
+	}
+
+	async updateIntroductionLetter(id: string, introductionLetter: string): Promise<User> {
+		const [updatedUser] = await db
+			.update(userSchema)
+			.set({ introductionLetter })
+			.where(eq(userSchema.id, id))
+			.returning();
+
+		const user = new User(
+			updatedUser.id,
+			updatedUser.email,
+			updatedUser.name,
+			updatedUser.emailVerified ?? false,
+			updatedUser.image,
+			updatedUser.role as UserRole,
+			updatedUser.licenseNumber,
+			updatedUser.createdAt ?? undefined,
+			updatedUser.updatedAt ?? undefined,
+		);
+		user.phone = updatedUser.phone ?? null;
+		user.tenantCount = updatedUser.tenantCount ?? 1;
+		user.pets = (updatedUser.pets as 'none' | 'has_pet') ?? 'none';
+		user.moveDate = (updatedUser.moveDate as 'asap' | 'flexible' | 'exact_date') ?? 'flexible';
+		user.monthlyIncome = updatedUser.monthlyIncome ?? null;
+		user.introductionLetter = updatedUser.introductionLetter ?? null;
+		return user;
 	}
 }
