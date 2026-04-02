@@ -2,12 +2,20 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ProfileController } from './profile.controller.js';
 import { GetUserUseCase } from '../../application/user/get-user/get-user.use-case.js';
 import { UpdateUserUseCase } from '../../application/user/update-user/update-user.use-case.js';
+import { UpdateProfileUseCase } from '../../application/user/update-user/update-profile.use-case.js';
+import { UploadUserImageUseCase } from '../../application/user/upload-user-image/upload-user-image.use-case.js';
+import { UpdateRentalProfileUseCase } from '../../application/user/update-user/update-rental-profile.use-case.js';
+import { UpdateIntroductionLetterUseCase } from '../../application/user/update-user/update-introduction-letter.use-case.js';
 import { UserRole } from '../../domain/entities/user-role.enum.js';
 
 describe('ProfileController', () => {
 	let controller: ProfileController;
 	let mockGetUserUseCase: { execute: jest.Mock };
 	let mockUpdateUserUseCase: { execute: jest.Mock };
+	let mockUpdateProfileUseCase: { execute: jest.Mock };
+	let mockUploadUserImageUseCase: { execute: jest.Mock };
+	let mockUpdateRentalProfileUseCase: { execute: jest.Mock };
+	let mockUpdateIntroductionLetterUseCase: { execute: jest.Mock };
 
 	const mockSession = {
 		user: { id: 'user-123', email: 'test@example.com', name: 'Test User' },
@@ -17,12 +25,20 @@ describe('ProfileController', () => {
 	beforeEach(async () => {
 		mockGetUserUseCase = { execute: jest.fn() };
 		mockUpdateUserUseCase = { execute: jest.fn() };
+		mockUpdateProfileUseCase = { execute: jest.fn() };
+		mockUploadUserImageUseCase = { execute: jest.fn() };
+		mockUpdateRentalProfileUseCase = { execute: jest.fn() };
+		mockUpdateIntroductionLetterUseCase = { execute: jest.fn() };
 
 		const module: TestingModule = await Test.createTestingModule({
 			controllers: [ProfileController],
 			providers: [
 				{ provide: GetUserUseCase, useValue: mockGetUserUseCase },
 				{ provide: UpdateUserUseCase, useValue: mockUpdateUserUseCase },
+				{ provide: UpdateProfileUseCase, useValue: mockUpdateProfileUseCase },
+				{ provide: UploadUserImageUseCase, useValue: mockUploadUserImageUseCase },
+				{ provide: UpdateRentalProfileUseCase, useValue: mockUpdateRentalProfileUseCase },
+				{ provide: UpdateIntroductionLetterUseCase, useValue: mockUpdateIntroductionLetterUseCase },
 			],
 		}).compile();
 

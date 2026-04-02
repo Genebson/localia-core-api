@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, boolean, varchar } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, boolean, varchar, integer } from 'drizzle-orm/pg-core';
 
 export const user = pgTable('user', {
   id: varchar('id', { length: 255 }).primaryKey(),
@@ -6,6 +6,12 @@ export const user = pgTable('user', {
   email: text('email').notNull().unique(),
   emailVerified: boolean('email_verified').default(false),
   image: text('image'),
+  phone: text('phone'),
+  tenantCount: integer('tenant_count').default(1),
+  pets: varchar('pets', { length: 20 }).default('none'),
+  moveDate: varchar('move_date', { length: 20 }).default('flexible'),
+  monthlyIncome: integer('monthly_income'),
+  introductionLetter: text('introduction_letter'),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
   role: varchar('role', { length: 20 }).default('seeker'),

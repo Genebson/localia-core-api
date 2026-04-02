@@ -59,4 +59,51 @@ export class EmailService {
 			this.logger.error(`Failed to send password reset email to ${to}: ${err}`);
 		}
 	}
+
+	async sendContactEmail(
+		to: string,
+		agentName: string,
+		seekerName: string,
+		seekerEmail: string,
+		seekerPhone: string,
+		message: string,
+		propertyTitle: string,
+		propertyPrice: string,
+		propertyLocation: string,
+		propertyUrl: string,
+	): Promise<void> {
+		try {
+			await this.resendService.send({
+				from: this.fromEmail,
+				to,
+				subject: `Nuevo contacto por: ${propertyTitle}`,
+				html: `
+					<h2>Nuevo mensaje de contacto</h2>
+					<p>Un usuario está interesado en tu propiedad.</p>
+					<hr/>
+					<h3>Datos del usuario</h3>
+					<ul>
+						<li><strong>Nombre:</strong> ${seekerName}</li>
+						<li><strong>Email:</strong> ${seekerEmail}</li>
+						<li><strong>Teléfono:</strong> ${seekerPhone}</li>
+					</ul>
+					<h3>Mensaje</h3>
+					<p>${message}</p>
+					<hr/>
+					<h3>Propiedad</h3>
+					<ul>
+						<li><strong>Título:</strong> ${propertyTitle}</li>
+						<li><strong>Precio:</strong> ${propertyPrice}</li>
+						<li><strong>Ubicación:</strong> ${propertyLocation}</li>
+						<li><strong>Enlace:</strong> <a href="${propertyUrl}">${propertyUrl}</a></li>
+					</ul>
+					<br/>
+					<p>Best regards,<br/>The Localia Team</p>
+				`,
+			});
+			this.logger.log(`Contact email sent to agent ${to} for property ${propertyTitle}`);
+		} catch (err) {
+			this.logger.error(`Failed to send contact email to ${to}: ${err}`);
+		}
+	}
 }
