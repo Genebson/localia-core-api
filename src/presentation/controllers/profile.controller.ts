@@ -65,6 +65,7 @@ export class ProfileController {
 			throw new Error('Not authenticated');
 		}
 		const { url } = await this.uploadUserImageUseCase.execute(dto);
+		await this.updateUserUseCase.execute(session.user.id, { image: url });
 		return new UploadUserImageResponseDto(url);
 	}
 

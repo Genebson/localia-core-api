@@ -1,5 +1,5 @@
 import { Controller, Post, Body } from '@nestjs/common';
-import { AllowAnonymous } from '@thellesp/nestjs-better-auth';
+import { AllowAnonymous } from '../../infrastructure/auth/allow-anonymous.js';
 import { SendEmailToAgentUseCase } from '../../application/contact/send-email-to-agent/send-email-to-agent.use-case.js';
 import { SendEmailToAgentRequestDto } from '../../application/contact/send-email-to-agent/send-email-to-agent.request.dto.js';
 import { SendEmailToAgentResponseDto } from '../../application/contact/send-email-to-agent/send-email-to-agent.response.dto.js';
