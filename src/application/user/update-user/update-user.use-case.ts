@@ -11,16 +11,24 @@ export class UpdateUserUseCase {
 	) {}
 
 	async execute(userId: string, dto: UpdateUserRequestDto): Promise<UpdateUserResponseDto> {
+		if (dto.image !== undefined) {
+			const updated = await this.userRepository.updateImage(userId, dto.image);
+			return UpdateUserResponseDto.fromEntity(updated);
+		}
+
 		if (dto.role === UserRole.AGENT) {
 			if (!dto.licenseNumber || dto.licenseNumber.length < 5) {
 				throw new BadRequestException('License number must be at least 5 characters');
 			}
+			const updated = await this.userRepository.updateRole(userId, dto.role, dto.licenseNumber);
+			return UpdateUserResponseDto.fromEntity(updated);
 		}
 
-		const licenseNumberValue = dto.role === UserRole.AGENT && dto.licenseNumber ? dto.licenseNumber : null;
+		if (dto.role === UserRole.SEEKER) {
+			const updated = await this.userRepository.updateRole(userId, dto.role, null);
+			return UpdateUserResponseDto.fromEntity(updated);
+		}
 
-		const updated = await this.userRepository.updateRole(userId, dto.role, licenseNumberValue);
-
-		return UpdateUserResponseDto.fromEntity(updated);
+		throw new BadRequestException('Invalid update request');
 	}
 }

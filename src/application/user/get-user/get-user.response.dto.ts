@@ -8,8 +8,15 @@ export class GetUserResponseDto {
 		attributes: {
 			email: string;
 			name: string | null;
+			image: string | null;
+			phone: string | null;
 			role: UserRole;
 			licenseNumber: string | null;
+			tenantCount: number;
+			pets: 'none' | 'has_pet';
+			moveDate: 'asap' | 'flexible' | 'exact_date';
+			monthlyIncome: number | null;
+			introductionLetter: string | null;
 		};
 	};
 
@@ -25,8 +32,15 @@ export class GetUserResponseDto {
 				attributes: {
 					email: entity.email,
 					name: entity.name,
+					image: entity.image,
+					phone: entity.phone,
 					role: entity.role,
 					licenseNumber: entity.licenseNumber,
+					tenantCount: entity.tenantCount,
+					pets: entity.pets,
+					moveDate: entity.moveDate,
+					monthlyIncome: entity.monthlyIncome,
+					introductionLetter: entity.introductionLetter,
 				},
 			},
 		});

@@ -69,6 +69,34 @@ export class PropertyRepository implements IPropertyRepository {
 		return rows.filter((row) => !row.deletedAt).map((row) => this.rowToEntity(row));
 	}
 
+	async findByAgentIdPaginated(
+		agentId: string,
+		page: number,
+		limit: number,
+		sort: 'asc' | 'desc',
+	): Promise<{ properties: Property[]; total: number }> {
+		const rows = await db
+			.select()
+			.from(property)
+			.where(eq(property.agentId, agentId));
+		const activeRows = rows.filter((row) => !row.deletedAt);
+
+		const sorted = activeRows.sort((a, b) => {
+			const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+			const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+			return sort === 'asc' ? dateA - dateB : dateB - dateA;
+		});
+
+		const total = sorted.length;
+		const offset = (page - 1) * limit;
+		const paginatedRows = sorted.slice(offset, offset + limit);
+
+		return {
+			properties: paginatedRows.map((row) => this.rowToEntity(row)),
+			total,
+		};
+	}
+
 	async update(prop: Property): Promise<Property> {
 		const [row] = await db
 			.update(property)

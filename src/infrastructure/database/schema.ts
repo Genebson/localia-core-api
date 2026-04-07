@@ -14,6 +14,7 @@ export const user = pgTable('user', {
   email: text('email').notNull().unique(),
   emailVerified: boolean('email_verified').default(false),
   image: text('image'),
+  phone: text('phone'),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
   role: varchar('role', { length: 20 }).default('seeker'),

@@ -12,6 +12,10 @@ describe('UpdateUserUseCase', () => {
 	beforeEach(() => {
 		mockRepository = {
 			updateRole: jest.fn(),
+			updateImage: jest.fn(),
+			updateNameAndPhone: jest.fn(),
+			updateRentalProfile: jest.fn(),
+			updateIntroductionLetter: jest.fn(),
 		};
 		useCase = new UpdateUserUseCase(mockRepository);
 	});
