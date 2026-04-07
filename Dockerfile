@@ -18,6 +18,10 @@ COPY package*.json ./
 RUN npm ci --only=production
 
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY drizzle.config.ts ./
+COPY drizzle/ ./drizzle/
+COPY src/infrastructure ./src/infrastructure
 
 ENV NODE_ENV=production
 
